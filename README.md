@@ -1,1 +1,1 @@
-# solidity-sourcemap-decompressor
+solidity-sourcemap-decompressor
