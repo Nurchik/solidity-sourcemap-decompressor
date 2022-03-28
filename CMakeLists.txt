@@ -11,4 +11,4 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(test_sm main.c solidity_sourcemap.c solidity_sourcemap.h)
+add_executable(sourcemap_decompressor main.c solidity_sourcemap.c solidity_sourcemap.h)

@@ -12,8 +12,20 @@ int main() {
         memcpy(source_map + i * len, aa, len);
     }
     source_map[len * multiplicator] = '\0';
-    struct Accumulator acc = decompress_source_map(26829999, source_map);
-    printf("%d %d %d %s", acc.offset, acc.size, acc.fileId, acc.jumpType);
-    free(source_map);
+//    struct Accumulator acc = decompress_source_map(26829999, source_map);
+//    printf("%d %d %d %s", acc.offset, acc.size, acc.fileId, acc.jumpType);
+//    node_t acc = node_at(source_map, 26829999);
+//    printf("%s %s %s %s", acc.s, acc.l, acc.f, acc.j);
+//    cnode_t acc = cnode_at(source_map, 26829999);
+//    printf("%s %s %s %s", acc.s, acc.l, acc.f, acc.j);
+//    char source_map[] = "559:6070:41:-;;77;;::7;;:444:::a;;:::o;::::";
+    long elements_count;
+    struct res_node * array = decompress(source_map, &elements_count);
+    rnode el = *(array + 26830000);
+    printf("%ld %ld %ld %s\n", el.offset, el.size, el.fileId, &el.jumpType);
+//    for (int i=0; i < res.length; i++) {
+//        rnode el = *(res.array + i);
+//        printf("%ld %ld %ld %s\n", el.offset, el.size, el.fileId, &el.jumpType);
+//    }
     return 0;
 }
