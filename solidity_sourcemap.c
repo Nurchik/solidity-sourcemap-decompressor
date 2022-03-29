@@ -161,3 +161,86 @@ struct res_node * decompress(char* sourcemap, long *counter){
 
     return res.array;
 }
+
+long jttl(const char* jump_type){
+    switch (*jump_type) {
+        case 'o': return 0;
+        case 'i': return 1;
+        case '-': return 2;
+    }
+    return -1;
+}
+
+char ltjt(const long* jt){
+    switch (*jt) {
+        case 0: return 'o';
+        case 1: return 'i';
+        default: return '-';
+    }
+}
+
+long ** decompress_opt(char* sourcemap, long *counter){
+    char *_sourcemap = sourcemap;
+    char *_node;
+    long count = 0;
+    for (; (_node=strchr(_sourcemap, ';')) != NULL; (++count, _sourcemap=_node + 1));
+    *counter = count + 1;
+    size_t l = sizeof(long *);
+    long **arr = calloc(count + 1, l);
+
+    char *node;
+    char *component;
+    long idx = 0;
+    long acc[4] = {-1, -1, -1, 2};
+    for (; (node=strchr(sourcemap, ';')) != NULL; (idx += 1)) {
+        if (node == sourcemap) {
+            long *val = calloc(4, sizeof(long));
+            memcpy(val, acc, sizeof(long) * 4);
+            arr[idx] = val;
+            sourcemap=node + 1;
+            continue;
+        }
+        short component_counter = 0;
+        for (; (component = strchr(sourcemap, ':')) != NULL && component < node && component_counter < 3; component_counter++) {
+            if (component == sourcemap) {
+                sourcemap = component + 1;
+                continue;
+            }
+            acc[component_counter] = strtol(sourcemap, NULL, 10);
+            sourcemap = component + 1;
+        }
+        if (component_counter < 3) {
+            acc[component_counter] = strtol(sourcemap, NULL, 10);
+        }
+        else if (*sourcemap != ';' && *sourcemap != ':') {
+            acc[3] = jttl(sourcemap);
+        }
+        long *val = calloc(4, sizeof(long));
+        memcpy(val, acc, sizeof(long) * 4);
+        arr[idx] = val;
+        sourcemap=node + 1;
+    }
+    short component_counter = 0;
+    if (*sourcemap != '\0') {
+        for (; (component = strchr(sourcemap, ':')) != NULL && component_counter < 3; component_counter++) {
+            if (component == sourcemap) {
+                sourcemap = component + 1;
+                continue;
+            }
+            acc[component_counter] = strtol(sourcemap, NULL, 10);
+            sourcemap = component + 1;
+        }
+        if (component_counter < 3) {
+            acc[component_counter] = strtol(sourcemap, NULL, 10);
+        }
+        else if (*sourcemap != ';' && *sourcemap != ':') {
+            acc[3] = jttl(sourcemap);
+        }
+    }
+
+    long *val = calloc(4, sizeof(long));
+    memcpy(val, acc, sizeof(long) * 4);
+    arr[idx] = val;
+
+    return arr;
+}

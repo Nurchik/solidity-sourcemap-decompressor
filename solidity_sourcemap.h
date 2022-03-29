@@ -44,4 +44,6 @@ struct result_array {
     long length;
 };
 
+long ** decompress_opt(char* sourcemap, long *counter);
+char ltjt(const long* jt);
 #endif //SOLIDITY_SOURCEMAP_H
